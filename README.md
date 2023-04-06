@@ -16,7 +16,7 @@ It contains these features:
 - Buffer Keywords/Directory support
 - LSP([language-server-protocol](https://github.com/microsoft/language-server-protocol)) support. Easy to install LSP Server with one command
 - Written in pure vim script for vim8 and neovim
-- Snippet support
+- Snippet support with ultisnips or vim-vsnip.
 - Fast performance
 
 ## Installation
@@ -28,6 +28,9 @@ Vimscript config with vim-plug:
 ```vim
 Plug 'jayli/vim-easycomplete'
 Plug 'SirVer/ultisnips'
+" or use vim-vsnip
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
 ```
 Run `:PlugInstall`.
 
@@ -35,6 +38,9 @@ Lua config with Packer.nvim:
 
 ```lua
 use { 'jayli/vim-easycomplete', requires = {'SirVer/ultisnips'}}
+-- or use vim-vsnip
+use { 'hrsh7th/vim-vsnip' }
+use { 'hrsh7th/vim-vsnip-integ' }
 ```
 Run `:PackerInstall`
 
@@ -156,6 +162,7 @@ All supported languages:
 | directory   | directory | No Need                  | Integrated         | None         | -                         |
 | buf         | buf & dict| No Need                  | Integrated         | None         | -                         |
 | snips       | Snippets  | ultisnips                | Integrated         | python3      | -                         |
+| vsnip       | Snippets  | vim-vsnip                | Integrated         | None         | -                         |
 | ts          | js/ts     | tsserver                 | Yes                | node/npm     | Yes                       |
 | deno        | js/ts     | denols                   | Yes                | deno         | Yes                       |
 | tn          | TabNine   | TabNine                  | Yes                | None         | No                        |
@@ -227,7 +234,7 @@ let g:easycomplete_filetypes = {
 
 ### Snippet Support
 
-Vim-EasyComplete does not support snippets by default. If you want snippet integration, you will first have to install `ultisnips`. UltiSnips is compatible with Vim-EasyComplete out of the box. UltiSnips required python3 installed.
+Vim-EasyComplete does not support snippets by default. If you want snippet integration, you will first have to install `ultisnips` or `vim-vsnip`. UltiSnips and Vsnip are compatible with Vim-EasyComplete out of the box. UltiSnips required python3 installed.
 
 > [Solution of "E319: No python3 provider found" Error in neovim 0.4.4 with ultisnips](https://github.com/jayli/vim-easycomplete/issues/171)
 

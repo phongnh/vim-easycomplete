@@ -2045,6 +2045,10 @@ function! s:SnippetsInit()
   endtry
 endfunction
 
+function! easycomplete#VsnipSupports() abort
+  return exists('*vsnip#get_complete_items') == 1
+endfunction
+
 function! easycomplete#nill() abort
   return ''
 endfunction
