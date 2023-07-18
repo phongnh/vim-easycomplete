@@ -2021,6 +2021,7 @@ function! easycomplete#SnipSupports()
 endfunction
 
 function! s:SnipSupports()
+  return g:easycomplete_snips_enable ? v:true : v:false
   if !has("python3")
     return v:false
   endif
