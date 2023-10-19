@@ -15,7 +15,6 @@ function! s:do()
   let l:request_params = { 'context': { 'includeDeclaration': v:false } }
   let l:server_names = easycomplete#util#FindLspServers()['server_names']
   if empty(l:server_names)
-    call s:DoTSRename()
     return
   endif
   let l:server_name = l:server_names[0]
@@ -39,10 +38,6 @@ function! s:InputCallback(old_text, new_text)
         \   },
         \   'on_notification': function('s:HandleLspCallback', [s:server_name]),
         \   })
-endfunction
-
-function! s:DoTSRename()
-  call easycomplete#input#pop("", function("easycomplete#sources#ts#rename"))
 endfunction
 
 function! s:HandleLspCallback(server_name, data)

@@ -5,15 +5,6 @@ endfunction
 
 function! s:do()
   call easycomplete#action#signature#LspRequest()
-  let all_plugins = easycomplete#GetAllPlugins()
-  if has_key(all_plugins, "ts") && easycomplete#sources#deno#IsTSOrJSFiletype() &&
-        \ !easycomplete#sources#deno#IsDenoProject()
-    let ts = get(all_plugins, "ts", {})
-    let ts_filetypes = ts["whitelist"]
-    if index(ts_filetypes, &filetype) >= 0
-      call easycomplete#sources#ts#signature()
-    endif
-  endif
 endfunction
 
 function! s:close()
