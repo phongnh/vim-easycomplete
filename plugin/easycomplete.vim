@@ -246,12 +246,6 @@ augroup easycomplete#PluginRegister
       \ 'whitelist': ['*'],
       \ 'completor': 'easycomplete#sources#buf#completor',
       \ })
-
-  au User easycomplete_default_plugin call easycomplete#RegisterSource({
-      \ 'name': 'snips',
-      \ 'whitelist': ['*'],
-      \ 'completor': 'easycomplete#sources#snips#completor',
-      \ })
 augroup END
 
 augroup easycomplete#NormalBinding
