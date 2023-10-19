@@ -280,8 +280,6 @@ augroup easycomplete#NormalBinding
   autocmd User easycomplete_pum_completechanged noa call easycomplete#CompleteChanged()
 augroup END
 
-command! -nargs=? EasyCompleteInstallServer :call easycomplete#installer#install(<q-args>)
-command! -nargs=? InstallLspServer :call easycomplete#installer#install(<q-args>)
 command! EasyCompleteGotoDefinition :call easycomplete#defination()
 command! EasyCompleteCheck :call easycomplete#checking()
 command! EasyCompleteLint :call easycomplete#lint()
