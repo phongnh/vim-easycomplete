@@ -103,9 +103,7 @@ function! easycomplete#_enable()
   doautocmd <nomodeline> User easycomplete_after_constructor
   call s:SetupCompleteCache()
   " lsp 服务初始化必须要放在按键绑定之后
-  if !easycomplete#sources#deno#IsTSOrJSFiletype() || easycomplete#sources#deno#IsDenoProject()
-    call easycomplete#lsp#enable()
-  endif
+  call easycomplete#lsp#enable()
   if easycomplete#ok('g:easycomplete_diagnostics_enable')
     call easycomplete#sign#init()
     call s:AsyncRun(function('easycomplete#lsp#diagnostics_enable'),[
@@ -288,15 +286,6 @@ function! s:CompleteTypingMatch(...)
   call s:SecondComplete(s:easycomplete_start_pos, filtered_menu, g:easycomplete_menuitems, word)
 endfunction
 
-" 这里调用是异步回来，需要记录上一次 complete 的 start_pos
-function! easycomplete#TabNineCompleteRendering()
-  let current_items = g:easycomplete_stunt_menuitems[0 : g:easycomplete_maxlength]
-  let tabnine_result = easycomplete#sources#tn#GetGlobalSourceItems()
-  let result = tabnine_result + current_items
-  let start_pos = empty(s:easycomplete_start_pos) ? col('.') - strlen(s:GetTypingWord()) : s:easycomplete_start_pos
-  call s:SecondCompleteRendering(start_pos, result)
-endfunction
-
 function! s:SecondCompleteRendering(start_pos, result)
   if g:env_is_iterm
     call s:StopAsyncRun()
@@ -320,7 +309,7 @@ function! s:SecondComplete(start_pos, menuitems, easycomplete_menuitems, word)
     let result = easycomplete#util#uniq(result)
   endif
   " 防止抖动
-  let result_all = (easycomplete#sources#tn#available() ? easycomplete#sources#tn#GetGlobalSourceItems() : []) + result
+  let result_all = result
   call s:SecondCompleteRendering(a:start_pos, result_all)
   call s:AddCompleteCache(a:word, deepcopy(g:easycomplete_stunt_menuitems))
   " complete() 会触发 completedone 事件，会执行 s:flush()
@@ -795,11 +784,6 @@ function! easycomplete#typing()
   if s:zizzing() | return "" | endif
 
   if !easycomplete#FireCondition()
-    " tabnine
-    if s:TabnineSupports() && easycomplete#sources#tn#FireCondition()
-      call s:flush()
-      call timer_start(20, { -> easycomplete#sources#tn#refresh(v:true) })
-    endif
     return ""
   endif
 
@@ -1108,9 +1092,6 @@ function! s:CompleteMatchAction()
     call s:StopZizz()
     let ctx = easycomplete#context()
     " tabnine
-    if s:TabnineSupports()
-      call easycomplete#sources#tn#refresh()
-    endif
     let l:vim_word = s:GetTypingWordByGtx()
     if g:env_is_nvim && empty(l:vim_word)
       " 输入了 . 或者 : 后先 closemenu 再尝试做一次匹配
@@ -1118,7 +1099,7 @@ function! s:CompleteMatchAction()
       call s:flush()
       call s:StopZizz()
       " 这里的 timer 要比 tabnine 的触发慢 20ms 以上才能正常激活 
-      let local_delay = easycomplete#ok("g:easycomplete_tabnine_enable") ? 50 : 20
+      let local_delay = 20
       call timer_start(local_delay, { -> easycomplete#typing() })
       return
     endif
@@ -1733,12 +1714,6 @@ function! s:FirstCompleteRendering(start_pos, menuitems)
       let result = filtered_menu[0 : g:easycomplete_maxlength]
       if len(result) <= 10
         let result = easycomplete#util#uniq(result)
-      endif
-
-      " tabnine
-      if easycomplete#sources#tn#available()
-        let tabnine_result = easycomplete#sources#tn#GetGlobalSourceItems()
-        let result = tabnine_result + copy(result)
       endif
 
       " Info: 调用 complete 有两种方法
@@ -2406,20 +2381,6 @@ function! easycomplete#TextChangedP()
     endif
     let b:old_changedtick = b:changedtick
   elseif g:env_is_vim && pumvisible() && !s:zizzing()
-    " tabnine, 空格 trigger 出的 tabnine menu 敲入字母后的逻辑
-    if len(easycomplete#GetStuntMenuItems()) == 0 && s:TabnineSupports()
-      " nvim 中的 paste text 行为异常，空格弹出 pum 后直接 paste 时，c-y 会把
-      " 菜单关掉的同时也把 pasted text 清空，应该是nvim的bug，这里用c-x,c-z 代替
-      if has('nvim') && empty(g:easycomplete_insert_char)
-        call timer_start(50, { -> s:SendKeys("\<C-X>\<C-Z>")})
-      else
-        call s:CloseCompletionMenu()
-      endif
-      call s:flush()
-      call s:StopZizz()
-      call easycomplete#TextChangedI()
-      return
-    endif
     if s:OrigionalPosition() || g:easycomplete_first_complete_hit != 1
       call s:SnapShoot()
       return
@@ -2469,10 +2430,6 @@ endfunction
 
 function! easycomplete#BufEnter()
   if easycomplete#ok('g:easycomplete_diagnostics_enable')
-    if easycomplete#sources#deno#IsTSOrJSFiletype() && !easycomplete#sources#deno#IsDenoProject()
-      call easycomplete#sources#ts#bufEnter()
-      return
-    endif
     call timer_start(1600, { -> easycomplete#lint() })
   endif
   call s:flush()
