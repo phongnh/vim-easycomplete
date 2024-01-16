@@ -179,35 +179,6 @@ function! easycomplete#FileTypes(plugin_name, filetypes)
   return ret
 endfunction
 
-" 检查当前注册的插件中所依赖的 command 是否已经安装
-function! easycomplete#checking()
-  call s:flush()
-  let amsg = ["Checking lsp cmd tools dependencies:"]
-  call add(amsg, "")
-  for item in keys(g:easycomplete_source)
-    let l:name = item
-    if !has_key(g:easycomplete_source[item], 'command')
-      continue
-    endif
-    let l:command = get(g:easycomplete_source[item], 'command')
-    let l:flag_txt = easycomplete#installer#executable(l:command) ? "*ready*" : "|missing|"
-    let l:flag_ico = easycomplete#installer#executable(l:command) ? "√" : "×"
-    let l:msg = "[".l:flag_ico."]" . " " . l:name . ": `" . l:command . "` " . l:flag_txt
-    call add(amsg, l:msg)
-  endfor
-  call add(amsg, "")
-  call add(amsg, "Done")
-  let current_winid = bufwinid(bufnr(""))
-  vertical botright new
-  setlocal previewwindow filetype=help buftype=nofile nobuflisted modifiable
-  let message_winid = bufwinid(bufnr(""))
-  let ix = 0
-  for line in amsg
-    let ix = ix + 1
-    call setbufline(bufnr(""), ix, line)
-  endfor
-endfunction
-
 function! easycomplete#GetAllPlugins()
   return copy(g:easycomplete_source)
 endfunction
