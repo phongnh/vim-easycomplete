@@ -259,7 +259,6 @@ augroup easycomplete#NormalBinding
 augroup END
 
 command! EasyCompleteGotoDefinition :call easycomplete#defination()
-command! EasyCompleteCheck :call easycomplete#checking()
 command! EasyCompleteLint :call easycomplete#lint()
 command! LintEasycomplete :call easycomplete#lint()
 command! EasyCompleteSignature :call easycomplete#signature()
