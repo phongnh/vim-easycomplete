@@ -271,7 +271,6 @@ command! EasyCompleteDisable : call easycomplete#disable()
 command! EasyCompleteEnable : call easycomplete#StartUp()
 command! EasyCompleteReference : call easycomplete#reference()
 command! EasyCompleteRename : call easycomplete#rename()
-command! EasyCompleteAiCoding : call easycomplete#AiCoding()
 command! BackToOriginalBuffer : call easycomplete#BackToOriginalBuffer()
 
 inoremap <expr> <CR> easycomplete#TypeEnterWithPUM()
