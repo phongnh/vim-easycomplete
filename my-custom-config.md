@@ -4,8 +4,6 @@
 use { 'jayli/vim-easycomplete', requires = {'SirVer/ultisnips'}}
 vim.g.easycomplete_diagnostics_enable = 1
 vim.g.easycomplete_signature_enable = 1
-vim.g.easycomplete_tabnine_enable = 1
-vim.g.easycomplete_tabnine_suggestion = 1
 vim.g.easycomplete_cursor_word_hl = 1
 vim.g.easycomplete_nerd_font = 1
 vim.g.easycomplete_enable = 1
@@ -25,8 +23,6 @@ With Lazy.nvim
   config = function()
     vim.g.easycomplete_diagnostics_enable = 1
     vim.g.easycomplete_signature_enable = 1
-    vim.g.easycomplete_tabnine_enable = 1
-    vim.g.easycomplete_tabnine_suggestion = 1
     vim.g.easycomplete_cursor_word_hl = 1
     vim.g.easycomplete_nerd_font = 1
     vim.g.easycomplete_enable = 1

@@ -28,7 +28,6 @@ function M.start()
       vim.api.nvim_buf_set_extmark(0, loading_ns, vim.fn.line('.') - 1, vim.fn.col('.') - 1, {
           id = 2,
           virt_text_pos = "eol",
-          virt_text = {{tostring(M.get_loading_str()) .. "", "TabNineSuggestionFirstLine"}},
           virt_lines = nil
         })
     end)

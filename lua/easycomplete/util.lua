@@ -41,15 +41,6 @@ function Util.get_word(a)
   return k
 end
 
-function Util.isTN(item)
-  local plugin_name = Util.get_item_plugin_name(item)
-  if plugin_name == "tn" then
-    return true
-  else
-    return false
-  end
-end
-
 function Util.curr_lsp_constructor_calling()
   Util.constructor_calling_by_name(Util.current_plugin_name())
 end

@@ -71,8 +71,6 @@ let s:first_render_timer = 0
 let g:easycomplete_first_render_delay = 500
 " lint 中 FloatWidth
 let g:easycomplete_lint_float_width = 180
-" 控制是否触发tabnine suggest的timer
-let g:easycomplete_tabnine_suggest_timer = 0
 
 function! easycomplete#Enable()
   call timer_start(800, { -> easycomplete#_enable() })
@@ -312,10 +310,6 @@ function! easycomplete#CompleteDone()
   endif
   " bugfix for #88
   if g:env_is_nvim
-    " 触发 tabnine suggest
-    if !easycomplete#pum#visible() && !easycomplete#IsBacking() && easycomplete#tabnine#ready() 
-      call s:LazyTabNineFire(500)
-    endif
     "TODO v:complete_item 是否是必须的，还需再测试一下
     if easycomplete#pum#visible() || (g:easycomplete_first_complete_hit != 1)
       call s:zizz()
@@ -328,14 +322,6 @@ function! easycomplete#CompleteDone()
     endif
   endif
   call s:flush()
-endfunction
-
-function! s:LazyTabNineFire(delay)
-  if g:easycomplete_tabnine_suggest_timer > 0
-    call timer_stop(g:easycomplete_tabnine_suggest_timer)
-    let g:easycomplete_tabnine_suggest_timer = 0
-  endif
-  let g:easycomplete_tabnine_suggest_timer = timer_start(a:delay, { -> easycomplete#tabnine#fire() })
 endfunction
 
 function! easycomplete#WinScrolled()
@@ -355,7 +341,6 @@ function! easycomplete#InsertLeave()
     call easycomplete#lint()
     call easycomplete#sign#LintCurrentLine()
   endif
-  call easycomplete#tabnine#flush()
   if s:zizzing()
     return
   endif
@@ -1253,12 +1238,6 @@ function! easycomplete#CleverTab()
     call easycomplete#pum#next()
     call timer_start(5, { -> s:SnapShoot()})
     return easycomplete#pum#SetWordBySelecting()
-  else
-    if easycomplete#tabnine#SnippetReady()
-      " call easycomplete#tabnine#insert()
-      call s:AsyncRun(function('easycomplete#tabnine#insert'), [], 5)
-      return ""
-    endif
   endif
   if &filetype == "sh" && easycomplete#context()['typed'] == "#!"
     " sh #!<tab> hack, bugfix #12
@@ -1594,11 +1573,7 @@ endfunction
 
 function! easycomplete#StoreCompleteSourceItems(plugin_name, result)
   let norm_menu_list = s:NormalizeMenulist(a:result, a:plugin_name)
-  if a:plugin_name == "tn"
-    let sort_menu_list = norm_menu_list
-  else
-    let sort_menu_list = s:NormalizeSort(norm_menu_list)
-  endif
+  let sort_menu_list = s:NormalizeSort(norm_menu_list)
   let g:easycomplete_source[a:plugin_name].complete_result = deepcopy(sort_menu_list)
 endfunction
 
@@ -1615,7 +1590,6 @@ endfunction
 function! s:CombineAllMenuitems()
   let result = []
   for name in keys(g:easycomplete_source)
-    if name == "tn" | continue | endif
     call extend(result, get(g:easycomplete_source[name], 'complete_result', []))
   endfor
   return result
@@ -1715,7 +1689,6 @@ function! s:FirstCompleteRendering(start_pos, menuitems)
       " 次FirstComplete当匹配菜单内容过大、计算量过重时，带来的延时会造成明显
       " 的 CmdlineEnter 和 CmdlineLeave，带来 statusline 闪烁。
       " 因此在 FirstComplete 时采用方法一，SecondComplete 采用方法二
-      call easycomplete#tabnine#flush()
       call s:complete(a:start_pos, result)
       call s:SetFirstCompeleHit()
       call s:AddCompleteCache(s:GetTypingWord(), deepcopy(g:easycomplete_stunt_menuitems))
@@ -1978,10 +1951,6 @@ function! s:LetCompleteTaskQueueAllDone()
   for item in g:easycomplete_complete_taskqueue
     let item.done = 1
   endfor
-endfunction
-
-function! s:TabnineSupports() abort
-  return g:easycomplete_tabnine_enable && easycomplete#sources#tn#available()
 endfunction
 
 function! easycomplete#SnipSupports()
@@ -2296,8 +2265,6 @@ endfunction
 function! easycomplete#CursorHoldI()
   if easycomplete#IsBacking()
     " do nothting
-  elseif easycomplete#tabnine#ready()
-    call s:LazyTabNineFire(30)
   endif
 endfunction
 
@@ -2308,10 +2275,6 @@ function! easycomplete#TextChangedI()
   if exists('b:easycomplete_enable') && empty(b:easycomplete_enable)
     return
   endif
-  if g:env_is_nvim
-    call easycomplete#tabnine#LoadingStop()
-  endif
-  call easycomplete#tabnine#flush()
   " TextCHangedP 和 TextChangedI 是互斥的
   if g:env_is_nvim && easycomplete#pum#visible()
     " TextChangedP

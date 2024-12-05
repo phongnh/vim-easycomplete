@@ -25,7 +25,6 @@ vim.g.easycomplete_kind_icons = {
   buf = "",
   dict = "󰈍",
   snip = "",
-  tabnine = "󱙺",
   operator = "󰞷",
   class = "",
   local = "✎",
@@ -65,16 +64,10 @@ vim.g.easycomplete_pum_format = {"kind", "abbr", "menu"}
 --  EasyPmenuExtra
 --  EasyFunction
 --  EasySnippet
---  EasyTabNine
 --  EasySnippets
 vim.cmd[[
   hi EasyFuzzyMatch guifg=lightblue
 ]]
-
--- Enable Tabnine, default is on, install tabnine lsp via `:InstallLspServer tn`
-vim.g.easycomplete_tabnine_enable = 1
--- Enable Tabnine suggestion, default is on
-vim.g.easycomplete_tabnine_suggestion = 1
 
 -- Enable directory complete. Default is on
 vim.g.easycomplete_directory_enable = 1

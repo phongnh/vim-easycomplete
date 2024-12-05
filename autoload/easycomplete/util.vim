@@ -222,10 +222,6 @@ endfunction " }}}
 " GetInfoByCompleteItem {{{
 function! easycomplete#util#GetInfoByCompleteItem(item, all_menu)
   let t_plugin_name = s:GetPluginNameFromUserData(a:item)
-  if t_plugin_name == "tn"
-    let l:info = s:GetTabNineItemInfo(a:item)
-    return l:info
-  endif
   let t_name = empty(get(a:item, "abbr")) ? get(a:item, "word") : get(a:item, "abbr")
   let t_name = s:TrimWavyLine(t_name)
   let t_sha = easycomplete#util#GetSha256(a:item)
@@ -251,15 +247,6 @@ function! easycomplete#util#GetInfoByCompleteItem(item, all_menu)
     let info = info[0:50] + ["..."]
   endif
   return info
-endfunction
-
-function! s:GetTabNineItemInfo(item)
-  " 这里的 info 是一个字符串，不是数组
-  let l:info = get(a:item, "info", "")
-  if empty(l:info)
-    return []
-  endif
-  return split(l:info, "\n")
 endfunction
 
 function! s:TrimWavyLine(str)
@@ -1475,7 +1462,6 @@ function easycomplete#util#ItemIsFromLS(item)
     return v:false
   endif
   let plugin_name = get(b:easycomplete_lsp_plugin, "name", "")
-  if plugin_name == "tn" | return v:false | endif
   if "[". toupper(plugin_name) ."]" ==# menu_str
     return v:true
   else
@@ -2025,9 +2011,6 @@ endfunction " }}}
 
 function! easycomplete#util#GetConfigPath(plugin_name) " {{{
   let plugin_name = a:plugin_name
-  if a:plugin_name == "tabnine"
-    let plugin_name = "tn"
-  endif
   let config_root = easycomplete#util#ConfigRoot()
   let config_path = config_root . '/servers/' . plugin_name . '/config.json'
   return config_path
