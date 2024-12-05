@@ -63,11 +63,7 @@ function! easycomplete#pum#complete(startcol, items)
     call s:close()
     return
   endif
-  if easycomplete#ok("g:easycomplete_tabnine_enable")
-    let items = s:TabNineHLNormalize(a:items)
-  else
-    let items = a:items
-  endif
+  let items = a:items
   let s:curr_items = deepcopy(items)
   call s:OpenPum(a:startcol, s:NormalizeItems(s:curr_items))
 endfunction
@@ -85,7 +81,6 @@ endfunction
 " 区分开，这里增加四种常见的颜色配置：
 "  EasyFunction:   "%", Function/Constant/Scruct
 "  EasySnippet:    "&", Snippet/snip
-"  EasyTabNine:    "@", TabNine
 "  EasyNormal:     ":", Buf/Text/dict - Pmenu 默认色
 function! s:hl()
   if empty(s:easycomplete_hl_exec_cmd)
@@ -99,7 +94,6 @@ function! s:hl()
     let pmenu_extra_hl_group = s:HLExists("EasyPmenuExtra") ? "EasyPmenuExtra" : "PmenuExtra"
     let function_hl_group = s:HLExists("EasyFunction") ? "EasyFunction" : "Conditional"
     let snippet_hl_group = s:HLExists("EasySnippet") ? "EasySnippet" : "Number"
-    let tabnine_hl_group = s:HLExists("EasyTabNine") ? "EasyTabNine" : "Character"
     let pmenu_hl_group = s:HLExists("EasyPmenu") ? "EasyPmenu" : "Pmenu"
 
     let s:easycomplete_hl_exec_cmd = [
@@ -108,14 +102,12 @@ function! s:hl()
           \ 'syntax region CustomKind       matchgroup=Conceal start=/|\([^|]|\)\@=/  matchgroup=Conceal end=/\(|[^|]\)\@<=|/ concealends oneline',
           \ 'syntax region CustomFunction   matchgroup=Conceal start=/%\([^%]%\)\@=/  matchgroup=Conceal end=/\(%[^%]\)\@<=%/ concealends oneline',
           \ 'syntax region CustomSnippet    matchgroup=Conceal start=/&\([^&]&\)\@=/  matchgroup=Conceal end=/\(&[^&]\)\@<=&/ concealends oneline',
-          \ 'syntax region CustomTabNine    matchgroup=Conceal start=/@\([^@]@\)\@=/  matchgroup=Conceal end=/\(@[^@]\)\@<=@/ concealends oneline',
           \ 'syntax region CustomNormal     matchgroup=Conceal start=/:\([^:]:\)\@=/  matchgroup=Conceal end=/\(:[^:]\)\@<=:/ concealends oneline',
           \ "hi CustomFuzzyMatch " . dev . "fg=" . easycomplete#ui#GetFgColor(fuzzymatch_hl_group),
           \ "hi link CustomKind     " . pmenu_kind_hl_group,
           \ "hi link CustomExtra    " . pmenu_extra_hl_group,
           \ "hi link CustomFunction " . function_hl_group,
           \ "hi link CustomSnippet  " . snippet_hl_group,
-          \ "hi link CustomTabNine  " . tabnine_hl_group,
           \ "hi link CustomNormal   " . pmenu_hl_group,
           \ ]
           " \ "hi Search guibg=NONE guifg=NONE ctermbg=NONE ctermfg=NONE",
@@ -171,26 +163,6 @@ function! easycomplete#pum#WinScrolled()
     " pum 窗口的移动
     call s:RenderScrollThumb()
   endif
-endfunction
-
-function! s:TabNineHLNormalize(menu_items)
-  if empty(g:easycomplete_typing_ctx) | return a:menu_items | endif
-  let typing_word = get(g:easycomplete_typing_ctx, "typing", "")
-  let count_o = min([len(a:menu_items), 5])
-  for k in range(count_o)
-    let item = a:menu_items[k]
-    if has_key(item, "plugin_name") && get(item, "plugin_name") ==# "tn"
-      let abbr = get(item, "abbr", "")
-      let count_k = s:CompareStrings(typing_word, abbr)
-      if count_k == 0
-        let item["abbr_marked"] = abbr
-      else
-        let item["abbr_marked"] = "§" . strcharpart(abbr, 0, count_k) . "§" . strcharpart(abbr, count_k, 150)
-      endif
-      let item["marked_position"] = range(count_k)
-    endif
-  endfor
-  return a:menu_items
 endfunction
 
 function! s:CompareStrings(str1, str2)
@@ -838,9 +810,6 @@ function! s:MapFunction(key, val)
           \ kind_o ==# g:easycomplete_lsp_type_font["snippet"]
       " 颜色2
       let kind_char = "&"
-    elseif kind_o ==# g:easycomplete_menu_skin["tabnine"]["kind"]
-      " 颜色3
-      let kind_char = "@"
     elseif kind_o ==# g:easycomplete_menu_skin["buf"]["kind"] ||
           \ kind_o ==# g:easycomplete_menu_skin["dict"]["kind"] ||
           \ kind_o ==# g:easycomplete_lsp_type_font["text"]

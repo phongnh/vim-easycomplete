@@ -2,7 +2,6 @@
 local EasyComplete = {}
 local Util = require "easycomplete.util"
 local AutoLoad = require "easycomplete.autoload"
-local TabNine = require "easycomplete.tabnine"
 local console = Util.console
 local log = Util.log
 
@@ -37,8 +36,6 @@ end
 
 -- all in all 入口
 local function nvim_lsp_handler()
-  TabNine.init()
-
   if not Util.nvim_installer_installed() then
     return
   end

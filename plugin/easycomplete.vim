@@ -40,10 +40,6 @@ if g:easycomplete_nerd_font == 1
         \      "kind":get(kind_icons, "dict", "󰈍"),
         \      "menu":"Dict",
         \    },
-        \   "tabnine": {
-        \      "kind":get(kind_icons, "tabnine", "󱙺"),
-        \      "menu":"𝘛𝘕"
-        \    }
         \ }
   let g:easycomplete_sign_text = {
         \   'error':       "",
@@ -97,16 +93,9 @@ let g:easycomplete_menuflag_snip = empty(   easycomplete#util#get(g:easycomplete
                                   \ "[S]" : easycomplete#util#get(g:easycomplete_menu_skin, "snip", "menu")
 let g:easycomplete_kindflag_snip = empty(   easycomplete#util#get(g:easycomplete_menu_skin, "snip", "kind")) ?
                                   \ "s" :   easycomplete#util#get(g:easycomplete_menu_skin, "snip", "kind")
-let g:easycomplete_menuflag_tabnine = empty(easycomplete#util#get(g:easycomplete_menu_skin, "tabnine", "menu")) ?
-                                  \ "[TN]": easycomplete#util#get(g:easycomplete_menu_skin, "tabnine", "menu")
-let g:easycomplete_kindflag_tabnine = empty(easycomplete#util#get(g:easycomplete_menu_skin, "tabnine", "kind")) ?
-                                  \ "" :    easycomplete#util#get(g:easycomplete_menu_skin, "tabnine", "kind")
 
 if !exists("g:easycomplete_fuzzymatch_hlgroup")
   let g:easycomplete_fuzzymatch_hlgroup = ""
-endif
-if !exists("g:easycomplete_tabnine_suggestion")
-  let g:easycomplete_tabnine_suggestion = 1
 endif
 if !exists("g:easycomplete_lsp_checking")
   let g:easycomplete_lsp_checking = 1
@@ -114,14 +103,8 @@ endif
 if !exists("g:easycomplete_lsp_type_font")
   let g:easycomplete_lsp_type_font = {}
 endif
-if !exists("g:easycomplete_tabnine_enable")
-  let g:easycomplete_tabnine_enable = 1
-endif
 if !exists("g:easycomplete_directory_enable")
   let g:easycomplete_directory_enable = 1
-endif
-if !exists("g:easycomplete_tabnine_config")
-  let g:easycomplete_tabnine_config = {}
 endif
 if !exists("g:easycomplete_snips_enable")
   " 为了防止代码阻塞，在主函数中定义
@@ -172,8 +155,6 @@ let g:easycomplete_config = {
       \ 'g:easycomplete_diagnostics_hover':  g:easycomplete_diagnostics_hover,
       \ 'g:easycomplete_signature_enable':   g:easycomplete_signature_enable,
       \ 'g:easycomplete_diagnostics_enable': g:easycomplete_diagnostics_enable,
-      \ 'g:easycomplete_tabnine_enable':     g:easycomplete_tabnine_enable,
-      \ 'g:easycomplete_tabnine_suggestion': g:easycomplete_tabnine_suggestion,
       \ 'g:easycomplete_enable':             g:easycomplete_enable,
       \ 'g:easycomplete_lsp_checking':       g:easycomplete_lsp_checking,
       \ 'g:easycomplete_menuflag_buf':       g:easycomplete_menuflag_buf,
@@ -182,10 +163,7 @@ let g:easycomplete_config = {
       \ 'g:easycomplete_kindflag_dict':      g:easycomplete_kindflag_dict,
       \ 'g:easycomplete_menuflag_snip':      g:easycomplete_menuflag_snip,
       \ 'g:easycomplete_kindflag_snip':      g:easycomplete_kindflag_snip,
-      \ 'g:easycomplete_kindflag_tabnine':   g:easycomplete_kindflag_tabnine,
-      \ 'g:easycomplete_menuflag_tabnine':   g:easycomplete_menuflag_tabnine,
       \ 'g:easycomplete_lsp_type_font':      g:easycomplete_lsp_type_font,
-      \ 'g:easycomplete_tabnine_config':     g:easycomplete_tabnine_config,
       \ 'g:easycomplete_cursor_word_hl':     g:easycomplete_cursor_word_hl,
       \ 'g:easycomplete_signature_offset':   g:easycomplete_signature_offset,
       \ 'g:easycomplete_directory_enable':   g:easycomplete_directory_enable,

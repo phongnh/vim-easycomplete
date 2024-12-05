@@ -12,7 +12,6 @@ https://github.com/jayli/vim-easycomplete/assets/188244/5fdef6cb-ef1d-4428-960e-
 
 It contains these features:
 
-- AI coding assistant via [tabnine](#TabNine-Support). (Highly Recommend!)
 - Buffer Keywords/Directory support
 - LSP([language-server-protocol](https://github.com/microsoft/language-server-protocol)) support. Easy to install LSP Server with one command
 - Written in pure vim script for vim8 and neovim
@@ -111,11 +110,8 @@ Global configurations:
 | `g:easycomplete_menu_skin`           | `{}`          | Menu skin.                                                    |
 | `g:easycomplete_sign_text`           | `{}`          | Sign icons.                                                   |
 | `g:easycomplete_lsp_type_font`       | ...           | lsp icons configuration                                       |
-| `g:easycomplete_tabnine_suggestion`  | 1             | Tabnine inline suggestion(for nvim only)                      |
 | `g:easycomplete_lsp_checking`        | 1             | Check whether the lsp is installed while opening a file       |
-| `g:easycomplete_tabnine_enable`      | 1             | Enable Tabnine                                                |
 | `g:easycomplete_directory_enable`    | 1             | Directory complete                                            |
-| `g:easycomplete_tabnine_config`      | `{}`          | [TabNine Configuration](#ai-coding-via-tabnine-support)       |
 | `g:easycomplete_filetypes`           | `{}`          | [Custom filetyps configuration](#language-support)            |
 | `g:easycomplete_enable`              | 1             | Enable this plugin                                            |
 | `g:easycomplete_tab_trigger`         | `<Tab>`       | Use tab to trigger completion and select next item            |
@@ -158,7 +154,6 @@ All supported languages:
 | snips       | Snippets  | ultisnips                | Integrated         | python3      | -                         |
 | ts          | js/ts     | tsserver                 | Yes                | node/npm     | Yes                       |
 | deno        | js/ts     | denols                   | Yes                | deno         | Yes                       |
-| tn          | TabNine   | TabNine                  | Yes                | None         | No                        |
 | vim         | Vim       | vimls                    | Yes                | node/npm     | Yes                       |
 | cpp         | C/C++/OC  | clangd                   | Yes                | None         | Yes                       |
 | css         | CSS       | cssls                    | Yes                | node/npm     | Yes                       |
@@ -210,7 +205,6 @@ More info about semantic completion for each supported language:
 - Deno: [denols](https://morioh.com/p/84a54d70a7fa) required. Use `:DenoCache` command for `deno cache` current ts/js file.
 - C# : [omnisharp](http://www.omnisharp.net/) required.
 - R: [r-languageserver](https://github.com/REditorSupport/languageserver) required.
-- TabNine: [TabNine](https://www.tabnine.com/)
 
 Add filetypes whitelist for specified language plugin:
 
@@ -231,30 +225,6 @@ Vim-EasyComplete does not support snippets by default. If you want snippet integ
 
 > [Solution of "E319: No python3 provider found" Error in neovim 0.4.4 with ultisnips](https://github.com/jayli/vim-easycomplete/issues/171)
 
-## AI Coding via TabNine Support
-
-Install TabNine: `:InstallLspServer tabnine`. Then restart your vim/nvim.
-
-<img src="https://gw.alicdn.com/imgextra/i2/O1CN01Qjk2tV2A20Ss9jtcq_!!6000000008144-0-tps-792-470.jpg" width="500px" />
-
-Set `let g:easycomplete_tabnine_enable = 0` to disable TabNine. You can config TabNine by `g:easycomplete_tabnine_config` witch contains two properties:
-
-- *line_limit*: The number of lines before and after the cursor to send to TabNine. If the option is smaller, the performance may be improved. (default: 1000)
-- *max_num_result*: Max results from TabNine. (default: 3)
-
-```vim
-let g:easycomplete_tabnine_config = {
-    \ 'line_limit': 1000,
-    \ 'max_num_result' : 3,
-    \ }
-```
-
-TabNine works well without APIKey. If you have a Tabnine's Pro API key or purchased a subscription license. To configure, you'll need to use the [TabNine' magic string](https://www.tabnine.com/faq#special_commands). Type `Tabnine::config` in insert mode to open the configuration panel.
-
-Disable TabNine inline suggestion: `let g:easycomplete_tabnine_suggestion = 0`.
-
----------------------
-
 ## Beautify completion menu
 
 Set `g:easycomplete_nerd_font = 1` to enable default nerdfonts configuration.
@@ -269,8 +239,6 @@ You can add custom Pmenu styles by defining these highlight groups:
 - `EasyPmenuExtra`: PmenuExtra style. It links to "PmenuExtra" by default.
 - `EasyFunction`: Function kind icon style. links to "Conditional" by default.
 - `EasySnippet`: Snippet kind icon style. links to "Number" by default.
-- `EasyTabNine`: TabNine kind icon style. links to "Character" by default.
-- `EasySnippets`: TabNine snippets suggestion style. links to "LineNr" by default
 
 More examples here: [full config example](custom-config.md)
 
@@ -287,10 +255,6 @@ My custom config:[my-custom-config](my-custom-config.md)
 [WIP] If you have bug reports or feature suggestions, please use the [issue tracker](https://github.com/jayli/vim-easycomplete/issues/new). In the meantime feel free to read some of my thoughts at <https://zhuanlan.zhihu.com/p/366496399>, <https://zhuanlan.zhihu.com/p/425555993>, [https://medium.com/@lijing00333/vim-easycomplete](https://dev.to/jayli/how-to-improve-your-vimnvim-coding-experience-with-vim-easycomplete-29o0)
 
 ## More Examples:
-
-TabNine snippets inline suggestion
-
-<img src="https://gw.alicdn.com/imgextra/i2/O1CN01vESZ6G1h3j5u4hmN4_!!6000000004222-1-tps-1189-606.gif" width="600" />
 
 Update Deno Cache via `:DenoCache`
 
@@ -315,10 +279,6 @@ Diagnostics jumping
 Signature
 
 <img src="https://img.alicdn.com/imgextra/i4/O1CN01kNd19n1k7nINy4SQT_!!6000000004637-1-tps-862-228.gif" width=600 />
-
-TabNine supporting:
-
-<img src="https://img.alicdn.com/imgextra/i3/O1CN013nBG6n1WjRE8rgMNi_!!6000000002824-1-tps-933-364.gif" width=600 />
 
 ### License
 
